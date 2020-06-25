@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+
+        html, body {
+            font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, sans-serif;
+        }
+
+        ul, ol {
+            padding: 0;
+        }
+
+
+        .banner1 {
+            height: 500px;
+            position: relative;
+            overflow: auto;
+            text-align: center;
+        }
+
+        .banner1 li {
+            list-style: none;
+        }
+
+        .banner1 ul li {
+            float: left;
+        }
+
+        #b06 {
+            width: 640px;
+        }
+
+        #b06 .dots {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 20px;
+        }
+
+        #b06 .dots li {
+
+            display: inline-block;
+
+            width: 10px;
+
+            height: 10px;
+
+            margin: 0 4px;
+
+            text-indent: -999em;
+
+            border: 2px solid #fff;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            opacity: .4;
+
+            -webkit-transition: background .2s, opacity .2s;
+
+            -moz-transition: background .2s, opacity .2s;
+
+            transition: background .2s, opacity .2s;
+
+        }
+        #b06 .dots li:active {
+            background: #fff;
+            opacity: 1;
+        }
+        #b06 .arrow {
+            position: absolute;
+            top: 200px;
+        }
+
+        #b06 #al {
+            left: 15px;
+        }
+
+        #b06 #ar {
+            right: 15px;
+        }
+    </style>
+    <script>
+        function imgReload() {
+            const wtmp = $("body").width();
+            const imgHeight = $(".banner1").height();
+            $("#b06 ul li").each(function () {
+                $(this).css({width: wtmp + "px"});
+                $(this).css({height: imgHeight + "px"});
+            });
+            $(".sliderimg").each(function () {
+                $(this).css({width: wtmp + "px"});
+                $(this).css({height: imgHeight + "px"});
+            });
+        }
+        $(document).ready(function (e) {
+            imgReload();
+            var unslider06 = $('#b06').unslider({
+                    dots: true,
+                    fluid: true
+                }),
+                data06 = unslider06.data('unslider');
+            $('.unslider-arrow06').click(function () {
+                var fn = this.className.split(' ')[1];
+                data06[fn]();
+            });
+        });
+    </script>
+</head>
+<body>
+<header>
+    <div class="banner1" id="b06">
+        <ul>
+            <li><img class="sliderimg" src="images/01.jpg" alt="" width="100%"></li>
+            <li><img class="sliderimg" src="images/02.jpg" alt="" width="100%"></li>
+            <li><img class="sliderimg" src="images/03.jpg" alt="" width="100%"></li>
+            <li><img class="sliderimg" src="images/04.jpg" alt="" width="100%"></li>
+            <li><img class="sliderimg" src="images/05.jpg" alt="" width="100%"></li>
+        </ul>
+        <a href="javascript:void(0);" class="unslider-arrow06 prev"><img class="arrow" id="al" src="../images/arrowl.png" alt="prev" width="20" height="35"></a>
+        <a href="javascript:void(0);" class="unslider-arrow06 prev"><img class="arrow" id="ar" src="../images/arrowr.png" alt="prev" width="20" height="35"></a>
+    </div>
+</header>
+</body>
+</html>
