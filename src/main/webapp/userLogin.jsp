@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: asus
-  Date: 2020/6/23
-  Time: 23:48
-  To change this template use File | Settings | File Templates.
---%>
 <%@page contentType="text/html;charset=UTF-8" language="java" isErrorPage="false" pageEncoding="UTF-8" %>
 <%
     String path = request.getContextPath();

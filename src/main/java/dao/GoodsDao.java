@@ -102,7 +102,7 @@ public class GoodsDao {
             for (int i = 0; i < 5; i++) {
                 pstm.setString(1, UUID.randomUUID().toString().substring(0, 4));
                 pstm.setDouble(2, Math.random());
-                pstm.setInt(3, (int) Math.random() * 10);
+                pstm.setInt(3, (int) (Math.random() * 10));
                 pstm.executeUpdate();
             }
         } catch (SQLException e) {

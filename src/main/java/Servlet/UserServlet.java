@@ -2,8 +2,6 @@ package Servlet;
 
 import bean.Goods;
 import bean.User;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import dao.GoodsDao;
 import dao.UserDao;
 
@@ -12,17 +10,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- * projectName:  com.zhy
- * packageName: ${PACKAGE_NAME}
- * date: 2020-06-24 17:39
- * copyright(c) 2020 南晓18卓工 邱依良
- */
 @WebServlet(name = "UserServlet", urlPatterns = "/UserServlet")
 public class UserServlet extends HttpServlet {
     UserDao userDao = new UserDao();
@@ -37,6 +28,7 @@ public class UserServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
         authority = request.getParameter("autSelect");
         username = request.getParameter("username");
         password = request.getParameter("password");
@@ -44,16 +36,13 @@ public class UserServlet extends HttpServlet {
         user = userDao.queryUserByUsername(username, authority);
         if (op.equals("0")) {
             if (user.getUsername()!=null && user.getUsername().equals(username) && user.getAuthority().equals(authority) && user.getPassword().equals(password)) {
+                session.setAttribute("username",username);
+                session.setAttribute("authority",authority);
                 if (authority.equals("0")) {
                     request.getRequestDispatcher("seller.jsp").forward(request, response);
                 } else{
-                    PageHelper.startPage(1, 8);
-                    System.out.println(PageHelper.getLocalPage());
                     goodsList = goodsDao.queryAllGoods();
-                    PageInfo<Goods> info = new PageInfo<>(goodsList, 5);
-                    int[] nums = info.getNavigatepageNums();
-                    request.setAttribute("info",info);
-                    request.setAttribute("nums",nums);
+                    request.setAttribute("goodsList",goodsList);
                     request.getRequestDispatcher("index.jsp").forward(request, response);
                 }
             }else {
@@ -65,10 +54,9 @@ public class UserServlet extends HttpServlet {
             }else {
                 userDao.insertUser(username,password,authority);
                 goodsList = goodsDao.queryAllGoods();
-                PageInfo<Goods> info = new PageInfo<Goods>(goodsList, 5);
-                int[] nums = info.getNavigatepageNums();
-                request.setAttribute("info",info);
-                request.setAttribute("nums",nums);
+                session.setAttribute("username",username);
+                session.setAttribute("authority",authority);
+                request.setAttribute("goodsList",goodsList);
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             }
         }

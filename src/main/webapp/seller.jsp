@@ -1,17 +1,10 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: asus
-  Date: 2020/6/24
-  Time: 20:57
-  To change this template use File | Settings | File Templates.
---%>
 <%@page contentType="text/html;charset=UTF-8" language="java" isErrorPage="false" pageEncoding="UTF-8" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort() + path + "/";
 %>
-<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
     <%--    <base href="<%=basePath%>">--%>
@@ -50,20 +43,46 @@
             $(".fun-1 span").click(function () {
                 location.href=("GoodsServlet?op=search");
             })
+            $(".fun-2 span").click(function () {
+                $(".fun form").hide();
+                $(".fun-2 form").show();
+            })
+            $(".fun-4 span").click(function () {
+                $(".fun form").hide();
+                $(".fun-4 form").show();
+            })
+            $(".fun").click(function () {
+                if(${empty authority}){
+                    alert("请登录");
+                    location.href=("userLogin.jsp");
+                }
+            })
         })
     </script>
 <body>
-<div class="content" style="width: 2000px;display: flex;">
-    <div class="fun">
+<header>
+    <c:if test="${empty authority}">
+        <a href="userLogin.jsp">登录</a>
+    </c:if>
+    <c:if test="${not empty authority}">
+        ${username}　
+        <a href="logout.jsp">退出</a>
+    </c:if>
+    <p>当前在线<%=application.getAttribute("count")%></p>
+</header>
+<div class="content" style="width: 2000px;display: flex;justify-items: center;justify-content: space-around">
+    <div class="fun" style="width: 800px;display: flex;justify-items: center;justify-content: space-around">
         <div class="fun-1">
             <span>下架商品</span>
         </div>
         <div class="fun-2">
             <span>按id查询商品</span>
-            <form action="GoodsServlet" onsubmit="return searchCheck(this)" method="post">
+            <form action="GoodsServlet" onsubmit="return searchCheck(this)" method="post" hidden>
                 商品Id:<input type="text" name="id">
+                <br>
                 <input type="text" name="op" value="search-id" hidden>
                 <input type="submit" name="submit" value="查询商品">
+                <br>
             </form>
         </div>
         <div class="fun-3">
@@ -71,16 +90,19 @@
         </div>
         <div class="fun-4">
             <span>插入商品</span>
-            <form action="GoodsServlet" onsubmit="return checkInsertInfo(this)">
+            <form action="GoodsServlet" onsubmit="return checkInsertInfo(this)" hidden>
                 商品名称:<input type="text" name="goodsName">
+                <br>
                 商品价格:<input type="text" name="goodsPrice">
+                <br>
                 商品数量:<input type="text" name="goodsNum">
+                <br>
                 <input type="text" name="op" value="insert" hidden>
                 <input type="submit" name="submit" value="插入商品">
             </form>
         </div>
     </div>
-    <c:if test="${not empty info}">
+    <c:if test="${not empty goodsList}">
         <div class="result">
             <table style="margin:0 auto;width:800px;border-collapse: collapse; text-align: center ;" border="1px" ;
                    cellspacing="20px" ;padding="16px"
@@ -92,32 +114,15 @@
                     <th>库存</th>
                     <th>下架</th>
                 </tr>
-                <c:forEach items="${info.list}" var="goods" varStatus="vs">
+                <c:forEach items="${goodsList}" var="goods" varStatus="vs">
                     <tr>
                         <td>${vs.index+1}</td>
                         <td>${goods.goodsName}</td>
                         <td>${goods.goodsPrice}</td>
                         <td>${goods.goodsNum}</td>
-                        <td><a href="GoodsServlet?op=delete&id=${goods.id}&pageNum=${info.pageNum}">下架</a></td>
+                        <td><a href="GoodsServlet?op=delete&id=${goods.id}">下架</a></td>
                     </tr>
                 </c:forEach>
-                <tr>
-                    <td colspan="10">
-                        <a href="GoodsServlet?pageNum=1&op=search">首页</a><a
-                            href="GoodsServlet?pageNum=${info.prePage}&op=search"
-                            contenteditable="${info.pageNum==1}"
-                            style="outline: none">上一页</a>
-                        <c:forEach items="${nums}" var="num">
-
-                            <a href="GoodsServlet?pageNum=${info.prePage}&op=search"
-                               style="text-decoration:${num==info.pageNum?'none':'underline'}"
-                               contenteditable="${num==info.pageNum}" style="outline: none">${num}</a>
-                        </c:forEach>
-                        <a href="GoodsServlet?pageNum=${info.prePage}&op=search"
-                           contenteditable="${info.pageNum==info.pages}" style="outline: none">下一页</a><a
-                            href="GoodsServlet?pageNum=${info.prePage}&op=search">末页</a>
-                    </td>
-                </tr>
             </table>
         </div>
     </c:if>
